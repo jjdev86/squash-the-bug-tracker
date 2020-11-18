@@ -44,12 +44,12 @@ const createUser = async (user) => {
 
   await pool
     .query(query)
-    .then(response => {
+    .then((response) => {
       if (response.affectedRows === 1) {
-          return;
+        return;
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err, `error`);
       return err;
     });
@@ -59,8 +59,7 @@ const createUser = async (user) => {
 const getUser = async (email) => {
   let query = `SELECT * FROM users WHERE email = "${email}"`;
 
-return await pool.query(query);
-
+  return await pool.query(query);
 };
 
 module.exports = {
