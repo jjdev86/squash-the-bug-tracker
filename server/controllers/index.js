@@ -6,33 +6,6 @@ const { send } = require("@sendgrid/mail");
 module.exports = {
   createUser: {
     post: (req, res) => {
-      // check if email already exists in db
-      //   db.isExistingUser(req.body.email, (err, result) => {
-      //     if (err) {
-      //       res.status(409).send({
-      //         msg: "This email address was already used!",
-      //       });
-      //     }
-      //     // create user
-      //     const salt = lib.salt();
-      //     // Prepend the salt to the user password and hash it
-      //     const hash = lib.hash(`${salt}${req.body.password}`);
-
-      //     req.body.hash = hash;
-      //     req.body.salt = salt;
-
-      //     // email, hash, salt
-      //     db.createUser(req.body, (err, result) => {
-      //       if (err) {
-      //         res.status(500).send({ msg: err });
-      //       }
-      //       res.status(201).send({
-      //         msg: "Registered",
-      //         result: result,
-      //       });
-      //     });
-      //   });
-
       db.isExistingUser(req.body.email)
         .then((result) => {
           console.log(result, `results from db`);
@@ -50,24 +23,21 @@ module.exports = {
 
             // insert user to db
             db.createUser(req.body)
-              .then(result => {
-
+              .then((result) => {
                 res.status(201).send({
                   msg: "Registered",
                   result: result,
                 });
               })
-              .catch(err => {
-                  console.log(err, `error in insert`)
-                res.status(500).send({ msg: 'error', err: err });
+              .catch((err) => {
+                console.log(err, `error in insert`);
+                res.status(500).send({ msg: "error", err: err });
               });
           }
-
-
         })
         .catch((err) => {
           res.status(409).send({
-            msg: "This email address was already used!",
+            msg: "Error with query to find user",
             err: err,
           });
         });
@@ -75,6 +45,54 @@ module.exports = {
   },
 
   getUser: {
-    post: (req, res) => {},
+    post: (req, res) => {
+      // user exhist and we need to compare hash with password provided.
+      db.getUser(req.body.email)
+        .then((result) => {
+          console.log(result, `result from searching for email`);
+          if (!result.length) {
+            // email not found in DB
+            res.status(409).send({
+              msg: 'Email address not found.'
+            })
+          } else {
+            let salt = result[0].salt;
+
+            if (result[0].hash === lib.hash(`${salt}${req.body.password}`)) {
+              var user = { id: result[0].id, email: req.body.email };
+              jwt.sign(
+                { user },
+                process.env.JWT_SECRET_TOKEN,
+                { expiresIn: "30m" },
+                (err, token) => {
+                  if (err) {
+                    res.status(500).send({
+                      msg: "error in jwt sign",
+                      err: err,
+                    });
+                  }
+
+                  res.status(200).send({
+                    user: { id: user.id, email: user.email },
+                    token,
+                  });
+                }
+              );
+            } else {
+              console.log("hash and password are not the same");
+              res.status(409).send({
+                msg: "the email does not exists",
+              });
+            }
+          }
+        })
+        .catch((err) => {
+          console.log(err, `error`);
+          res.status(409).send({
+            msg: "This email does not exists",
+            err: err,
+          });
+        });
+    },
   },
 };
