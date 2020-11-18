@@ -1,3 +1,4 @@
+const { response } = require("express");
 const mysql = require("mysql");
 const util = require("util");
 
@@ -40,10 +41,7 @@ const isExistingUser = async (email) => {
 const createUser = async (user) => {
   // create user in DB
   const query = `INSERT INTO users (email, hash, salt) VALUES ("${user.email}","${user.hash}","${user.salt}")`;
-  //   pool.query(query, (err, result) => {
-  //     if (err) throw err;
-  //     return result;
-  //   });
+
   await pool
     .query(query)
     .then(response => {
@@ -58,7 +56,12 @@ const createUser = async (user) => {
   //   return await pool.query(query);
 };
 
-const getUser = (user) => {};
+const getUser = async (email) => {
+  let query = `SELECT * FROM users WHERE email = "${email}"`;
+
+return await pool.query(query);
+
+};
 
 module.exports = {
   createUser,
