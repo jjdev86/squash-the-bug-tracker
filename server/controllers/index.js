@@ -8,7 +8,6 @@ module.exports = {
     post: (req, res) => {
       db.isExistingUser(req.body.email)
         .then((result) => {
-          console.log(result, `results from db`);
           if (result.length) {
             return res
               .status(409)
@@ -49,12 +48,11 @@ module.exports = {
       // user exhist and we need to compare hash with password provided.
       db.getUser(req.body.email)
         .then((result) => {
-          console.log(result, `result from searching for email`);
           if (!result.length) {
             // email not found in DB
             res.status(409).send({
-              msg: 'Email address not found.'
-            })
+              msg: "Email address not found.",
+            });
           } else {
             let salt = result[0].salt;
 
@@ -79,9 +77,8 @@ module.exports = {
                 }
               );
             } else {
-              console.log("hash and password are not the same");
               res.status(409).send({
-                msg: "the email does not exists",
+                msg: "The email or password is incorrect",
               });
             }
           }
