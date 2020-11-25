@@ -5,8 +5,15 @@ export const FULL_SCREEN_EXIT = 'FULL_SCREEN_EXIT';
 export const CHANGE_LAYOUT = 'CHANGE_LAYOUT';
 export const NAV_CONTENT_LEAVE = 'NAV_CONTENT_LEAVE';
 export const NAV_COLLAPSE_LEAVE = 'NAV_COLLAPSE_LEAVE';
+
 export const USER_AUTHENTICATE = 'USER_AUTHENTICATION';
-// export const SET_USER = payload => ({type: "SET_USER", payload})
 export const SET_USER = "SET_USER";
 export const LOG_OUT = "LOG_OUT";
+export const REGISTER_SUCESS = "REGISTER_SUCESS";
+export const REGISTER_FAIL = "REGISTER_FAIL";
+export const LOGIN_SUCESS = 'LOGIN_SUCESS';
+export const LOGIN_FAIL = "LOGIN_FAIL";
+
+export const SET_MESSAGE = "SET_MESSAGE";
+export const CLEAR_MESSAGE = "CLEAAR_MESSAGE";
 
