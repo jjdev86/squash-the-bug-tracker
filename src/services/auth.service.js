@@ -2,7 +2,7 @@
 import * as actionTypes from '../../../store/actions';
 
 
-export const login = (userInfo, history) => {
+ const login = (userInfo, history) => {
 
   fetch("/api/login", {
     method: "POST",
@@ -41,7 +41,7 @@ export const login = (userInfo, history) => {
 
 };
 // create new user
-export const register = (userInfo, history) => {
+ const register = (userInfo, history) => {
   fetch('/api/sign-up', {
     method: "POST",
     mode: "cors",
@@ -80,7 +80,7 @@ export const register = (userInfo, history) => {
 
 };
 // keep user login
-export const autoLogin = () => (dispatch) => {
+ const autoLogin = () => (dispatch) => {
   fetch('/auto_login', {
     headers: {
       "Content-Type": "application/json",
@@ -96,6 +96,12 @@ export const autoLogin = () => (dispatch) => {
 
 };
 
-export const logout = () => {
+ const logout = () => {
     localStorage.removeItem("token");
+}
+
+export default {
+    register,
+    login,
+    logout
 }
