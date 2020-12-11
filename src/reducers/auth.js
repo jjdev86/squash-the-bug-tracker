@@ -13,7 +13,8 @@ export default function (state = initialState, action) {
     case actionTypes.REGISTER_SUCESS:
       return {
         ...state,
-        isLoggedIn: false,
+        isLoggedIn: true,
+        user:payload.user
       };
     case actionTypes.REGISTER_FAIL:
       return {
