@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 module.exports = {
   // vaidate email
   validateRegister: (req, res, next) => {
+    console.log(req.body, `body`)
     if (!req.body.email || req.body.email.length < 3) {
       return res.status(400).send({
         msg: "Please enter a username with min. 3 chars",
@@ -17,7 +18,7 @@ module.exports = {
     }
 
     // password (confirmation pass) does not match
-    if (!req.body.confirmpwd || req.body.password !== req.body.confirmpwd) {
+    if (!req.body.confPassword || req.body.password !== req.body.confPassword) {
       return res.status(400).send({
         msg: "Both passwords must match",
       });
