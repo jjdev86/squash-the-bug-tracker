@@ -6,12 +6,8 @@ import { connect } from "react-redux";
 export default function (ComposedComponent) {
   class Authenticate extends React.Component {
     componentDidMount() {
-      if (!this.props.isAuthenticated) {
-        // this.props.addFlashMessage({
-        //     type: "error",
-        //     text: "You need to login to access this page"
-        // });
-        console.log("need to get authenticated");
+      console.log(this.props.isLoggedIn, `protected route`)
+      if (!this.props.isLoggedIn) {
         this.props.history.push('/auth/signin');
       }
     }
@@ -23,13 +19,13 @@ export default function (ComposedComponent) {
 
  
   Authenticate.propTypes = {
-      isAuthenticated: PropTypes.bool
+      isLoggedIn: PropTypes.bool
   }
 
 
   function mapStateToProps(state) {
     return {
-      isAuthenticated: state.loggedIn,
+      isLoggedIn: state.auth.isLoggedIn,
     };
   }
   return connect(mapStateToProps)(Authenticate);

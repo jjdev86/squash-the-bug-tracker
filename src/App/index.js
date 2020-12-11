@@ -16,8 +16,14 @@ const AdminLayout = Loadable({
 });
 
 class App extends Component {
+
   componentDidMount() {
     // this.props.autoLogin();
+  }
+
+  logOut() {
+      // remove local storage
+      localStorage.clear();
   }
 
   render() {
