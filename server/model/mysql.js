@@ -41,19 +41,7 @@ const isExistingUser = async (email) => {
 const createUser = async (user) => {
   // create user in DB
   const query = `INSERT INTO users (email, hash, salt) VALUES ("${user.email}","${user.hash}","${user.salt}")`;
-
-  await pool
-    .query(query)
-    .then((response) => {
-      if (response.affectedRows === 1) {
-        return;
-      }
-    })
-    .catch((err) => {
-      console.log(err, `error`);
-      return err;
-    });
-  //   return await pool.query(query);
+    return await pool.query(query)
 };
 
 const getUser = async (email) => {
