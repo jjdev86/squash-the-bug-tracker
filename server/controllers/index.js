@@ -6,6 +6,7 @@ const { send } = require("@sendgrid/mail");
 module.exports = {
   createUser: {
     post: (req, res) => {
+      console.log(req.body, `body`)
       db.isExistingUser(req.body.email)
         .then((result) => {
           if (result.length) {
@@ -23,10 +24,29 @@ module.exports = {
             // insert user to db
             db.createUser(req.body)
               .then((result) => {
-                res.status(201).send({
-                  msg: "Registered",
-                  result: result,
-                });
+                if (result.affectedRows === 1) {
+                  var user = { id: result.insertId, email: req.body.email };
+                  jwt.sign(
+                    { user },
+                    process.env.JWT_SECRET_TOKEN,
+                    { expiresIn: "30m" },
+                    
+                    (err, token) => {
+                      if (err) {
+                        res.status(500).send({
+                          msg: "error in jwt sign",
+                          err: err,
+                        });
+                      }
+
+                      res.status(200).send({
+                        user: { id: user.id, email: user.email },
+                        token,
+                        msg: 'User registered sucessfully!'
+                      });
+                    }
+                  );
+                }
               })
               .catch((err) => {
                 console.log(err, `error in insert`);
@@ -46,6 +66,7 @@ module.exports = {
   getUser: {
     post: (req, res) => {
       // user exhist and we need to compare hash with password provided.
+      console.log(req.body, `body`)
       db.getUser(req.body.email)
         .then((result) => {
           if (!result.length) {
