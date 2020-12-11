@@ -6,15 +6,13 @@ const initialState = {
     isTrigger: [], //for active default menu, set blank for horizontal
     ...config,
     isFullScreen: false, // static can't change
-    loggedIn: false,
-    user: {}
+
 };
 
 const reducer = (state = initialState, action) => {
     let trigger = [];
     let open = [];
 
-    console.log(action.type, `Action.type`)
     switch (action.type) {
         
         case actionTypes.COLLAPSE_MENU:
@@ -89,17 +87,19 @@ const reducer = (state = initialState, action) => {
             };
 
         // STARTED WORKING ON APP FROM HERE
-        case actionTypes.SET_USER:
-            return {
-                loggedIn: true,
-                user: action.payload
-            }
+        // case actionTypes.SET_USER:
+        //     return {
+        //         ...state,
+        //         isAuthUser: true,
+        //         user: action.payload
+        //     }
         
         case actionTypes.LOG_OUT:
-            localStorage.clear()
+            localStorage.clear();
             return {
-                loggedIn: false,
-                user: {}
+                ...state,
+                isAuthUser: false,
+                user: null
             }
         
         default:
