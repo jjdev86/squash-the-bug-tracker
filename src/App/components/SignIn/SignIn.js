@@ -2,7 +2,8 @@ import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-// import "./../../../assets/scss/style.scss";
+import {useForm } from 'react-hook-form';
+
 import "../../../assets/scss/style.scss";
 import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
@@ -16,8 +17,14 @@ const Login = (props) => {
 
   const { isLoggedIn } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
-
+  const {register, handleSubmit, watch, errors} = useForm({
+    mode: "onBlur"
+  });
+  // redux dispatch
   const dispatch = useDispatch();
+
+  // form validation
+  const onSubmit = data => console.log(data);
 
   const onChangeEmail = (e) => {
     const email = e.target.value;
@@ -30,7 +37,7 @@ const Login = (props) => {
   };
 
   const handleLogin = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     setLoading(true);
 
@@ -73,17 +80,26 @@ const Login = (props) => {
                 <i className="feather icon-unlock auth-icon" />
               </div>
               <h3 className="mb-4">Login</h3>
-              <form onSubmit={handleLogin}>
+              <form onSubmit={handleSubmit(handleLogin)}>
                 <div className="input-group mb-3">
                   <input
-                    type="email"
                     name="email"
                     value={email}
                     onChange={onChangeEmail}
                     className="form-control"
                     placeholder="Email"
+                    ref={register({
+                      required: 'Please enter your email address',
+                      pattern: {
+                        value:/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Enter a valid email address"
+                      }
+                    })}
                   />
                 </div>
+                  {errors.email && errors.email.message && (
+                    <div className="alert alert-danger">{errors.email.message}</div>
+                  )}
                 <div className="input-group mb-4">
                   <input
                     type="password"
@@ -92,8 +108,14 @@ const Login = (props) => {
                     onChange={onChangePassword}
                     className="form-control"
                     placeholder="password"
+                    ref={register({
+                      required: 'Enter your password',
+                    })}
                   />
                 </div>
+                  {errors.password && errors.password.message && (
+                    <div className="alert alert-danger">{errors.password.message}</div>
+                  )}
                 <div className="form-group text-left">
                   <div className="checkbox checkbox-fill d-inline">
                     <input
@@ -101,10 +123,10 @@ const Login = (props) => {
                       name="checkbox-fill-1"
                       id="checkbox-fill-a1"
                     />
-                    <label htmlFor="checkbox-fill-a1" className="cr">
+                    {/* <label htmlFor="checkbox-fill-a1" className="cr">
                       {" "}
                       Save credentials
-                    </label>
+                    </label> */}
                   </div>
                 </div>
                 {message && <div className="alert alert-danger">{message}</div>}
