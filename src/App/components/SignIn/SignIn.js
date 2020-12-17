@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import {useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 
 import "../../../assets/scss/style.scss";
 import Aux from "../../../hoc/_Aux";
@@ -17,14 +17,14 @@ const Login = (props) => {
 
   const { isLoggedIn } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
-  const {register, handleSubmit, watch, errors} = useForm({
-    mode: "onBlur"
+  const { register, handleSubmit, watch, errors } = useForm({
+    mode: "onBlur",
   });
   // redux dispatch
   const dispatch = useDispatch();
 
   // form validation
-  const onSubmit = data => console.log(data);
+  const onSubmit = (data) => console.log(data);
 
   const onChangeEmail = (e) => {
     const email = e.target.value;
@@ -49,10 +49,10 @@ const Login = (props) => {
       dispatch(login(userInfo))
         .then(() => {
           props.history.push("/dashboard");
-          // window.location.reload();
         })
         .catch(() => {
           setLoading(false);
+          setPassword('');
         });
     } else {
       setLoading(false);
@@ -80,6 +80,7 @@ const Login = (props) => {
                 <i className="feather icon-unlock auth-icon" />
               </div>
               <h3 className="mb-4">Login</h3>
+              {message && <div className="alert alert-danger">{message}</div>}
               <form onSubmit={handleSubmit(handleLogin)}>
                 <div className="input-group mb-3">
                   <input
@@ -89,17 +90,22 @@ const Login = (props) => {
                     className="form-control"
                     placeholder="Email"
                     ref={register({
-                      required: 'Please enter your email address',
+                      required: "Please enter your email address",
                       pattern: {
-                        value:/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Enter a valid email address"
-                      }
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Enter a valid email address",
+                      },
                     })}
                   />
+                  <div className="input-group ml-1">
+                    {errors.email && errors.email.message && (
+                      <span className=" text-danger">
+                        {errors.email.message}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                  {errors.email && errors.email.message && (
-                    <div className="alert alert-danger">{errors.email.message}</div>
-                  )}
+
                 <div className="input-group mb-4">
                   <input
                     type="password"
@@ -109,33 +115,38 @@ const Login = (props) => {
                     className="form-control"
                     placeholder="password"
                     ref={register({
-                      required: 'Enter your password',
+                      required: "Enter your password",
                     })}
                   />
+                  <div className="input-group ml-1">
+                    {errors.password && errors.password.message && (
+                      <span className="text-danger">
+                        {errors.password.message}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                  {errors.password && errors.password.message && (
-                    <div className="alert alert-danger">{errors.password.message}</div>
-                  )}
-                <div className="form-group text-left">
+
+                {/* <div className="form-group text-left">
                   <div className="checkbox checkbox-fill d-inline">
                     <input
                       type="checkbox"
                       name="checkbox-fill-1"
                       id="checkbox-fill-a1"
                     />
-                    {/* <label htmlFor="checkbox-fill-a1" className="cr">
+                    <label htmlFor="checkbox-fill-a1" className="cr">
                       {" "}
                       Save credentials
-                    </label> */}
+                    </label>
                   </div>
-                </div>
-                {message && <div className="alert alert-danger">{message}</div>}
+                </div> */}
+                
                 <button className="btn btn-primary shadow-2 mb-4">
-                {loading && (
-                <span className="spinner-border spinner-border-sm"></span>
-              )}
+                  {loading && (
+                    <span className="spinner-border spinner-border-sm"></span>
+                  )}
                   Login
-                  </button>
+                </button>
               </form>
               <p className="mb-2 text-muted">
                 Forgot password?{" "}
