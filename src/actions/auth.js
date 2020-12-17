@@ -42,10 +42,13 @@ export const login = (userInfo) => (dispatch) => {
         type: actionTypes.LOGIN_SUCESS,
         payload: { user: response.data.user },
       });
+      dispatch({
+        type: actionTypes.CLEAR_MESSAGE
+      });
+
       return Promise.resolve();
     },
     (err) => {
-      console.log(err.response, `login error`)
       const message =
         (err.response && err.response.data && err.response.data.msg) ||
         err.msg ||
