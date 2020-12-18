@@ -92,7 +92,7 @@ const register = ({email, password, confPassword}) => {
 }
 
 export default {
-    register,
+  register,
     login,
     logout
 }
