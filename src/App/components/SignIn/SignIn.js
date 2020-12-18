@@ -97,7 +97,7 @@ const Login = (props) => {
                       },
                     })}
                   />
-                  <div className="input-group ml-1">
+                  <div className="input-group ml-1" style={{fontSize: "12px"}}>
                     {errors.email && errors.email.message && (
                       <span className=" text-danger">
                         {errors.email.message}
@@ -118,7 +118,7 @@ const Login = (props) => {
                       required: "Enter your password",
                     })}
                   />
-                  <div className="input-group ml-1">
+                  <div className="input-group ml-1" style={{fontSize: "12px"}}>
                     {errors.password && errors.password.message && (
                       <span className="text-danger">
                         {errors.password.message}
