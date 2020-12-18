@@ -1,6 +1,7 @@
 import React, {useState, useRef} from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { register } from "../../../actions/auth";
+import { RegisterNewUser } from "../../../actions/auth";
+import { useForm } from "react-hook-form";
 
 import { NavLink } from "react-router-dom";
 import { Redirect } from "react-router-dom";
@@ -13,9 +14,13 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
   const [sucessful, setSuccesful] =useState(false);
+  
+  const { register, handleSubmit, watch, errors } = useForm({
+    mode: "onBlur",
+  });
+
 
   const { isLoggedIn } = useSelector((state) => state.auth);
-
   const {message } = useSelector(state => state.message);
   const dispatch = useDispatch();
 
@@ -37,14 +42,13 @@ const Register = () => {
 
 
   const handleRegister = (e) => {
-      e.preventDefault();
 
       setSuccesful(false);
 
       // validate form before sending to server
       // if valid, send to server
       const user = {email, password, confPassword}
-      dispatch(register(user))
+      dispatch(RegisterNewUser(user))
         .then(() => {
             setSuccesful(true);
         })
@@ -74,16 +78,30 @@ const Register = () => {
                   <i className="feather icon-user-plus auth-icon" />
                 </div>
                 <h3 className="mb-4">Sign up</h3>
-                <form onSubmit={handleRegister}>
+                <form onSubmit={handleSubmit(handleRegister)}>
                   <div className="input-group mb-3">
                     <input
-                      type="email"
+                      
                       className="form-control"
                       name="email"
                       value={email}
                       placeholder="Email"
                       onChange={onChangeEmail}
+                      ref={register({
+                        required: "Please enter your email address",
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: "Enter a valid email address",
+                        },
+                      })}
                     />
+                    <div className="input-group ml-1" style={{fontSize: "12px"}}>
+                    {errors.email && errors.email.message && (
+                      <span className=" text-danger">
+                        {errors.email.message}
+                      </span>
+                    )}
+                  </div>
                   </div>
                   <div className="input-group mb-3">
                     <input
@@ -93,7 +111,21 @@ const Register = () => {
                       value={password}
                       placeholder="Password"
                       onChange={onChangePassword}
+                      ref={register({
+                        required: "Enter your password",
+                        pattern: {
+                          value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/i,
+                          message: "Use 8 or more characters with a mix of letters, numbers & symbols",
+                        }
+                      })}
                     />
+                    <div className="input-group ml-1" style={{fontSize: "12px"}}>
+                    {errors.password && errors.password.message && (
+                      <span className="text-danger text-left">
+                        {errors.password.message}
+                      </span>
+                    )}
+                  </div>
                   </div>
                   <div className="input-group mb-4">
                     <input
@@ -103,7 +135,18 @@ const Register = () => {
                       value={confPassword}
                       placeholder="Confirm"
                       onChange={onChangeConfPassword}
+                      ref={register({
+                        required: "Enter your password",
+                        validate: value => value === password || "The password does not match."
+                      })}
                     />
+                    <div className="input-group ml-1" style={{fontSize: "12px"}}>
+                    {errors.confirmpwd && errors.confirmpwd.message && (
+                      <span className="text-danger">
+                        {errors.confirmpwd.message}
+                      </span>
+                    )}
+                  </div>
                   </div>
                   {/* feature not in use now*/}
                   {/* <div className="form-group text-left">
