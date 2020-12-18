@@ -2,7 +2,7 @@ import * as actionTypes from "./types";
 
 import AuthService from "../services/auth.service";
 
-export const register = (userInfo) => (dispatch) => {
+export const RegisterNewUser = (userInfo) => (dispatch) => {
   return AuthService.register(userInfo).then(
     (response) => {
       dispatch({
@@ -17,7 +17,6 @@ export const register = (userInfo) => (dispatch) => {
       return Promise.resolve();
     },
     (err) => {
-      console.log(err.response, `login error`)
       const message =
         (err.response && err.response.data && err.response.data.msg) ||
         err.msg ||
